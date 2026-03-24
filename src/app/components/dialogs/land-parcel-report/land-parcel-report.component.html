@@ -198,7 +198,7 @@
         </div>
 
         @if (
-          parcel.relationships.buildingIds?.length ||
+          parcel.relationships.buildingIds.length ||
           parcel.relationships.adjacentParcels ||
           parcel.relationships.parentParcel
         ) {
@@ -211,7 +211,7 @@
               </div>
             </div>
             <div class="lpr-field-grid lpr-field-grid--2">
-              @if (parcel.relationships.buildingIds?.length) {
+              @if (parcel.relationships.buildingIds.length) {
                 <div class="lpr-field lpr-field--wide">
                   <span class="lpr-field-label">Buildings on Parcel</span>
                   <span class="lpr-field-value lpr-mono">{{
@@ -866,7 +866,7 @@
                   <span class="lpr-field-value lpr-mono">{{ entry.documentRef || '—' }}</span>
                 </div>
               </div>
-              @if (entry.restrictions?.length) {
+              @if (entry.restrictions.length) {
                 <div class="lpr-rrr-sub-section">
                   <span class="lpr-rrr-sub-title"
                     >Restrictions ({{ entry.restrictions.length }})</span

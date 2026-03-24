@@ -65,7 +65,7 @@
     <div class="brr-stat-divider"></div>
     <div class="brr-stat">
       <span class="brr-stat-label">Units</span>
-      <span class="brr-stat-value">{{ building.units?.length || 0 }}</span>
+      <span class="brr-stat-value">{{ building.units.length || 0 }}</span>
     </div>
   </div>
   <!-- Tab Bar -->
@@ -79,10 +79,10 @@
         <mat-icon>{{ tab.icon }}</mat-icon
         ><span>{{ tab.label }}</span>
         @if (tab.id === 'rrr') {
-          <span class="brr-tab-badge">{{ building.rrr?.entries?.length ?? 0 }}</span>
+          <span class="brr-tab-badge">{{ building.rrr.entries.length || 0 }}</span>
         }
         @if (tab.id === 'units') {
-          <span class="brr-tab-badge">{{ building.units?.length ?? 0 }}</span>
+          <span class="brr-tab-badge">{{ building.units.length || 0 }}</span>
         }
       </button>
     }
@@ -148,8 +148,8 @@
           <div class="brr-address-block">{{ building.summary.address || '—' }}</div>
         </div>
         @if (
-          building.relationshipsTopology?.parcelRelation ||
-          building.relationshipsTopology?.adjacentBuildings
+          building.relationshipsTopology.parcelRelation ||
+          building.relationshipsTopology.adjacentBuildings
         ) {
           <div class="brr-section">
             <div class="brr-section-header">
@@ -282,7 +282,7 @@
     }
     @if (activeTab() === 'units') {
       <div class="brr-tab-body">
-        @if (!building.units?.length) {
+        @if (!building.units.length) {
           <div class="brr-empty-state">
             <mat-icon>apartment</mat-icon>
             <p>No building units registered for this building.</p>
@@ -293,7 +293,7 @@
               <div class="brr-unit-card-header">
                 <span class="brr-unit-badge">{{ UNIT_TYPE_DISPLAY[unit.unitType] }}</span>
                 <span class="brr-unit-id brr-mono">{{ unit.unitId }}</span>
-                <span class="brr-unit-floor">Floor {{ unit.floorNumber ?? '—' }}</span>
+                <span class="brr-unit-floor">Floor {{ unit.floorNumber || '—' }}</span>
               </div>
               <div class="brr-field-grid brr-field-grid--3 brr-unit-body">
                 <div class="brr-field">
@@ -308,7 +308,7 @@
                 </div>
                 <div class="brr-field">
                   <span class="brr-field-label">Rooms</span
-                  ><span class="brr-field-value brr-mono">{{ unit.rooms?.length ?? 0 }}</span>
+                  ><span class="brr-field-value brr-mono">{{ unit.rooms.length || 0 }}</span>
                 </div>
               </div>
             </div>
@@ -373,7 +373,7 @@
     }
     @if (activeTab() === 'rrr') {
       <div class="brr-tab-body">
-        @if (!building.rrr?.entries?.length) {
+        @if (!building.rrr.entries.length) {
           <div class="brr-empty-state">
             <mat-icon>gavel</mat-icon>
             <p>No Rights, Restrictions, or Responsibilities registered for this building.</p>
@@ -409,7 +409,7 @@
                   ><span class="brr-field-value brr-mono">{{ entry.documentRef || '—' }}</span>
                 </div>
               </div>
-              @if (entry.restrictions?.length) {
+              @if (entry.restrictions.length) {
                 <div class="brr-rrr-sub-section">
                   <span class="brr-rrr-sub-title"
                     >Restrictions ({{ entry.restrictions.length }})</span
