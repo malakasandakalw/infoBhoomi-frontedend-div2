@@ -56,9 +56,9 @@ export const routes: Routes = [
   {
     path: 'admin-organizations-area-edit/:org_id',
     loadComponent: () =>
-      import(
-        './admin/organizations/organization-area-edit/organization-area-edit.component'
-      ).then((m) => m.OrganizationAreaEditComponent),
+      import('./admin/organizations/organization-area-edit/organization-area-edit.component').then(
+        (m) => m.OrganizationAreaEditComponent,
+      ),
     canActivate: [superAdminGuard],
   },
   {

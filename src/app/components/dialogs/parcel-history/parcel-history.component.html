@@ -23,14 +23,19 @@
       placeholder="Search a deleted parcel by su_id or label…"
       aria-label="Search deleted parcels"
     />
-    <button mat-stroked-button type="button" [disabled]="searchingDeleted" (click)="searchDeleted()">
+    <button
+      mat-stroked-button
+      type="button"
+      [disabled]="searchingDeleted"
+      (click)="searchDeleted()"
+    >
       {{ searchingDeleted ? 'Searching…' : 'Find' }}
     </button>
     @if (deletedResults.length) {
       <ul class="deleted-results">
         @for (row of deletedResults; track row.su_id) {
           <li (click)="openDeletedParcel(row)">
-            <strong>{{ row.label || ('Parcel ' + row.su_id) }}</strong>
+            <strong>{{ row.label || 'Parcel ' + row.su_id }}</strong>
             <small>su_id {{ row.su_id }} · deleted {{ row.deleted_at | date: 'yyyy-MM-dd' }}</small>
           </li>
         }
@@ -71,165 +76,191 @@
           </aside>
         }
 
-      <mat-tab-group class="history-tabs">
-        <mat-tab label="Geometry ({{ themeRows('geometry').length }})">
-          <ng-container
-            [ngTemplateOutlet]="eventTimeline"
-            [ngTemplateOutletContext]="{
-              rows: themeRows('geometry'),
-              theme: 'geometry',
-              title: 'Geometry timeline',
-              empty: 'No geometry changes recorded.'
-            }"
-          ></ng-container>
-        </mat-tab>
+        <mat-tab-group class="history-tabs">
+          <mat-tab label="Geometry ({{ themeRows('geometry').length }})">
+            <ng-container
+              [ngTemplateOutlet]="eventTimeline"
+              [ngTemplateOutletContext]="{
+                rows: themeRows('geometry'),
+                theme: 'geometry',
+                title: 'Geometry timeline',
+                empty: 'No geometry changes recorded.',
+              }"
+            ></ng-container>
+          </mat-tab>
 
-        <mat-tab label="Attributes ({{ themeRows('attribute').length }})">
-          <ng-container
-            [ngTemplateOutlet]="eventTimeline"
-            [ngTemplateOutletContext]="{
-              rows: themeRows('attribute'),
-              theme: 'attribute',
-              title: 'Attribute timeline',
-              empty: 'No attribute changes recorded.'
-            }"
-          ></ng-container>
-        </mat-tab>
+          <mat-tab label="Attributes ({{ themeRows('attribute').length }})">
+            <ng-container
+              [ngTemplateOutlet]="eventTimeline"
+              [ngTemplateOutletContext]="{
+                rows: themeRows('attribute'),
+                theme: 'attribute',
+                title: 'Attribute timeline',
+                empty: 'No attribute changes recorded.',
+              }"
+            ></ng-container>
+          </mat-tab>
 
-        <mat-tab label="RRR ({{ themeRows('rrr').length }})">
-          <ng-container
-            [ngTemplateOutlet]="eventTimeline"
-            [ngTemplateOutletContext]="{
-              rows: themeRows('rrr'),
-              theme: 'rrr',
-              title: 'RRR timeline',
-              empty: 'No RRR changes recorded.'
-            }"
-          ></ng-container>
-        </mat-tab>
+          <mat-tab label="RRR ({{ themeRows('rrr').length }})">
+            <ng-container
+              [ngTemplateOutlet]="eventTimeline"
+              [ngTemplateOutletContext]="{
+                rows: themeRows('rrr'),
+                theme: 'rrr',
+                title: 'RRR timeline',
+                empty: 'No RRR changes recorded.',
+              }"
+            ></ng-container>
+          </mat-tab>
 
-        <mat-tab label="Relationships ({{ relationships.length }})">
-          <section class="affected-panel">
-            <h3>Affected records</h3>
-            <div class="affected-grid">
-              <div>
-                <span class="affected-label">Selected</span>
-                <strong>{{ affectedParcels?.selected?.su_id || selectedSuId }}</strong>
-                <small>{{ affectedParcels?.selected?.is_active ? 'Active' : 'Inactive / superseded' }}</small>
+          <mat-tab label="Relationships ({{ relationships.length }})">
+            <section class="affected-panel">
+              <h3>Affected records</h3>
+              <div class="affected-grid">
+                <div>
+                  <span class="affected-label">Selected</span>
+                  <strong>{{ affectedParcels?.selected?.su_id || selectedSuId }}</strong>
+                  <small>{{
+                    affectedParcels?.selected?.is_active ? 'Active' : 'Inactive / superseded'
+                  }}</small>
+                </div>
+                <div>
+                  <span class="affected-label">Parents</span>
+                  <strong>{{ parcelList(affectedParcels?.parents) }}</strong>
+                  <small>Source parcels</small>
+                </div>
+                <div>
+                  <span class="affected-label">Children / buildings</span>
+                  <strong>{{ parcelList(affectedParcels?.children) }}</strong>
+                  <small>Linked by parent or reference</small>
+                </div>
               </div>
-              <div>
-                <span class="affected-label">Parents</span>
-                <strong>{{ parcelList(affectedParcels?.parents) }}</strong>
-                <small>Source parcels</small>
-              </div>
-              <div>
-                <span class="affected-label">Children / buildings</span>
-                <strong>{{ parcelList(affectedParcels?.children) }}</strong>
-                <small>Linked by parent or reference</small>
-              </div>
-            </div>
-          </section>
+            </section>
 
-          <ng-container
-            [ngTemplateOutlet]="eventTimeline"
-            [ngTemplateOutletContext]="{
-              rows: relationshipRows(),
-              theme: 'relationship',
-              title: 'Relationship timeline',
-              empty: 'No relationship changes recorded.'
-            }"
-          ></ng-container>
-        </mat-tab>
+            <ng-container
+              [ngTemplateOutlet]="eventTimeline"
+              [ngTemplateOutletContext]="{
+                rows: relationshipRows(),
+                theme: 'relationship',
+                title: 'Relationship timeline',
+                empty: 'No relationship changes recorded.',
+              }"
+            ></ng-container>
+          </mat-tab>
 
-        <mat-tab label="Report">
-          <section class="report-tab">
-            <div class="report-meta">
-              Generated {{ generatedAt | date: 'd MMM y, HH:mm' }} · subject su_id {{ selectedSuId }}
-            </div>
+          <mat-tab label="Report">
+            <section class="report-tab">
+              <div class="report-meta">
+                Generated {{ generatedAt | date: 'd MMM y, HH:mm' }} · subject su_id
+                {{ selectedSuId }}
+              </div>
 
-            <div class="report-cards">
-              <div class="report-card">
-                <span>Attribute changes</span><strong>{{ reportCounts().attributes }}</strong>
+              <div class="report-cards">
+                <div class="report-card">
+                  <span>Attribute changes</span><strong>{{ reportCounts().attributes }}</strong>
+                </div>
+                <div class="report-card">
+                  <span>Geometry changes</span><strong>{{ reportCounts().geometry }}</strong>
+                </div>
+                <div class="report-card">
+                  <span>RRR events</span><strong>{{ reportCounts().rrr }}</strong>
+                </div>
+                <div class="report-card danger">
+                  <span>Legal spaces removed</span
+                  ><strong>{{ removedLegalSpaces().length }}</strong>
+                </div>
               </div>
-              <div class="report-card">
-                <span>Geometry changes</span><strong>{{ reportCounts().geometry }}</strong>
-              </div>
-              <div class="report-card">
-                <span>RRR events</span><strong>{{ reportCounts().rrr }}</strong>
-              </div>
-              <div class="report-card danger">
-                <span>Legal spaces removed</span><strong>{{ removedLegalSpaces().length }}</strong>
-              </div>
-            </div>
 
-            <h3 class="report-h">Lifecycle timeline</h3>
-            @if (timeline.length) {
-              <ol class="report-timeline">
-                @for (row of timeline; track row.id || $index) {
-                  <li>
-                    <div class="rt-title">{{ rowChange(row) }}</div>
-                    <div class="rt-meta">{{ rowDate(row) | date: 'yyyy-MM-dd HH:mm' }} · {{ rowUser(row) }}</div>
-                  </li>
-                }
-              </ol>
-            } @else {
-              <div class="empty-state">No lifecycle events recorded.</div>
-            }
+              <h3 class="report-h">Lifecycle timeline</h3>
+              @if (timeline.length) {
+                <ol class="report-timeline">
+                  @for (row of timeline; track row.id || $index) {
+                    <li>
+                      <div class="rt-title">{{ rowChange(row) }}</div>
+                      <div class="rt-meta">
+                        {{ rowDate(row) | date: 'yyyy-MM-dd HH:mm' }} · {{ rowUser(row) }}
+                      </div>
+                    </li>
+                  }
+                </ol>
+              } @else {
+                <div class="empty-state">No lifecycle events recorded.</div>
+              }
 
-            <h3 class="report-h">Legal spaces removed with this parcel</h3>
-            @if (removedLegalSpaces().length) {
-              <table class="report-table">
-                <tr><th>Change</th><th>su_id</th><th>Date</th></tr>
-                @for (row of removedLegalSpaces(); track row.id || $index) {
+              <h3 class="report-h">Legal spaces removed with this parcel</h3>
+              @if (removedLegalSpaces().length) {
+                <table class="report-table">
                   <tr>
-                    <td>{{ rowChange(row) }}</td>
-                    <td>{{ row['snapshot']?.su_id || row['su_id'] }}</td>
-                    <td>{{ rowDate(row) | date: 'yyyy-MM-dd' }}</td>
+                    <th>Change</th>
+                    <th>su_id</th>
+                    <th>Date</th>
                   </tr>
-                }
-              </table>
-            } @else {
-              <div class="empty-state">No legal spaces were removed with this parcel.</div>
-            }
+                  @for (row of removedLegalSpaces(); track row.id || $index) {
+                    <tr>
+                      <td>{{ rowChange(row) }}</td>
+                      <td>{{ row['snapshot']?.su_id || row['su_id'] }}</td>
+                      <td>{{ rowDate(row) | date: 'yyyy-MM-dd' }}</td>
+                    </tr>
+                  }
+                </table>
+              } @else {
+                <div class="empty-state">No legal spaces were removed with this parcel.</div>
+              }
 
-            @if (terminatedRights().length) {
-              <h3 class="report-h">Rights terminated</h3>
-              <ul class="report-rights">
-                @for (row of terminatedRights(); track row.id || $index) {
-                  <li>{{ rowChange(row) }} <small>{{ rowDate(row) | date: 'yyyy-MM-dd' }}</small></li>
-                }
-              </ul>
-            }
+              @if (terminatedRights().length) {
+                <h3 class="report-h">Rights terminated</h3>
+                <ul class="report-rights">
+                  @for (row of terminatedRights(); track row.id || $index) {
+                    <li>
+                      {{ rowChange(row) }} <small>{{ rowDate(row) | date: 'yyyy-MM-dd' }}</small>
+                    </li>
+                  }
+                </ul>
+              }
 
-            <h3 class="report-h">Shape lineage — previous shapes of parents & children</h3>
-            @if (shapeLineage.length) {
-              <div class="lineage-grid">
-                @for (item of shapeLineage; track $index) {
-                  <figure class="lineage-thumb">
-                    <svg viewBox="0 0 100 80" preserveAspectRatio="xMidYMid meet">
-                      <path
-                        [attr.d]="thumbPath(item.geom)"
-                        [attr.fill]="item.relation === 'child' ? '#E1F5EE' : (item.relation === 'parent' ? '#E6F1FB' : '#F1EFE8')"
-                        [attr.stroke]="item.relation === 'child' ? '#0F6E56' : (item.relation === 'parent' ? '#185FA5' : '#5F5E5A')"
-                        stroke-width="1.5"
-                      ></path>
-                    </svg>
-                    <figcaption>
-                      <strong>{{ lineageRelationLabel(item) }} · {{ item.label }}</strong>
-                      <small>
-                        {{ item.kind }} · {{ item.date | date: 'yyyy-MM-dd' }}
-                        @if (item.area != null) { · {{ item.area | number: '1.0-0' }} m² }
-                      </small>
-                    </figcaption>
-                  </figure>
-                }
-              </div>
-            } @else {
-              <div class="empty-state">No shape lineage available.</div>
-            }
-          </section>
-        </mat-tab>
-      </mat-tab-group>
+              <h3 class="report-h">Shape lineage — previous shapes of parents & children</h3>
+              @if (shapeLineage.length) {
+                <div class="lineage-grid">
+                  @for (item of shapeLineage; track $index) {
+                    <figure class="lineage-thumb">
+                      <svg viewBox="0 0 100 80" preserveAspectRatio="xMidYMid meet">
+                        <path
+                          [attr.d]="thumbPath(item.geom)"
+                          [attr.fill]="
+                            item.relation === 'child'
+                              ? '#E1F5EE'
+                              : item.relation === 'parent'
+                                ? '#E6F1FB'
+                                : '#F1EFE8'
+                          "
+                          [attr.stroke]="
+                            item.relation === 'child'
+                              ? '#0F6E56'
+                              : item.relation === 'parent'
+                                ? '#185FA5'
+                                : '#5F5E5A'
+                          "
+                          stroke-width="1.5"
+                        ></path>
+                      </svg>
+                      <figcaption>
+                        <strong>{{ lineageRelationLabel(item) }} · {{ item.label }}</strong>
+                        <small>
+                          {{ item.kind }} · {{ item.date | date: 'yyyy-MM-dd' }}
+                          @if (item.area != null) {
+                            · {{ item.area | number: '1.0-0' }} m²
+                          }
+                        </small>
+                      </figcaption>
+                    </figure>
+                  }
+                </div>
+              } @else {
+                <div class="empty-state">No shape lineage available.</div>
+              }
+            </section>
+          </mat-tab>
+        </mat-tab-group>
       </div>
     }
   </mat-dialog-content>

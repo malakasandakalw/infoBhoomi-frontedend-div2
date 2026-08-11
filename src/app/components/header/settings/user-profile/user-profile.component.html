@@ -10,10 +10,20 @@
     <div class="d-flex align-items-center gx-4 profile-image-container-main mx-auto">
       <div class="profile-image-container">
         @if (sex.toLowerCase() === 'male') {
-          <img src="sample/male_avatar.png" alt="Profile Image" class="profile-image" loading="lazy" />
+          <img
+            src="sample/male_avatar.png"
+            alt="Profile Image"
+            class="profile-image"
+            loading="lazy"
+          />
         }
         @if (sex.toLowerCase() === 'female') {
-          <img src="sample/female_avatar.png" alt="Profile Image" class="profile-image" loading="lazy" />
+          <img
+            src="sample/female_avatar.png"
+            alt="Profile Image"
+            class="profile-image"
+            loading="lazy"
+          />
         }
         <button mat-icon-button class="change-image-button" (click)="editProfilePic()">
           <mat-icon>photo_camera</mat-icon>

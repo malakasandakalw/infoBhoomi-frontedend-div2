@@ -171,7 +171,12 @@ export class SidePanelComponent {
 
         // feature_Id is still a UUID string — feature drawn but not yet saved to DB.
         // Skip all API calls to avoid the "expected a number but got UUID" backend error.
-        console.log('[SidePanel] featureId:', featureInfo.featureId, '| type:', typeof featureInfo.featureId);
+        console.log(
+          '[SidePanel] featureId:',
+          featureInfo.featureId,
+          '| type:',
+          typeof featureInfo.featureId,
+        );
         if (typeof featureInfo.featureId !== 'number') {
           this.selected_featureInfo = featureInfo;
           this.selected_feature_ID = featureInfo.featureId || '';
@@ -860,16 +865,18 @@ export class SidePanelComponent {
           for (const record of records) {
             this.fetchedRRRBaUnitIds.add(record.ba_unit_id);
             // Map admin_sources → RRRDocument[] so uploaded docs appear in the panel
-            const docs = (record.admin_sources || []).filter((src: any) => !!src.file_url).map((src: any) => {
-              return {
-                name: src.admin_source_type || 'Document',
-                type: 'application/octet-stream',
-                size: 0,
-                fileUrl: src.file_url,
-                adminSourceId: src.admin_source_id,
-                docLinkId: src.doc_link_id ?? undefined,
-              };
-            });
+            const docs = (record.admin_sources || [])
+              .filter((src: any) => !!src.file_url)
+              .map((src: any) => {
+                return {
+                  name: src.admin_source_type || 'Document',
+                  type: 'application/octet-stream',
+                  size: 0,
+                  fileUrl: src.file_url,
+                  adminSourceId: src.admin_source_id,
+                  docLinkId: src.doc_link_id ?? undefined,
+                };
+              });
             console.log(`[RRR Merge - Land] ba_unit_id=${record.ba_unit_id} mapped docs:`, docs);
             for (const rrr of record.rrrs || []) {
               const entryId = `BU-${record.ba_unit_id}`;
@@ -1086,16 +1093,18 @@ export class SidePanelComponent {
           for (const record of records) {
             this.fetchedRRRBaUnitIds.add(record.ba_unit_id);
             // Map admin_sources → RRRDocument[] so uploaded docs appear in the panel
-            const docs = (record.admin_sources || []).filter((src: any) => !!src.file_url).map((src: any) => {
-              return {
-                name: src.admin_source_type || 'Document',
-                type: 'application/octet-stream',
-                size: 0,
-                fileUrl: src.file_url,
-                adminSourceId: src.admin_source_id,
-                docLinkId: src.doc_link_id ?? undefined,
-              };
-            });
+            const docs = (record.admin_sources || [])
+              .filter((src: any) => !!src.file_url)
+              .map((src: any) => {
+                return {
+                  name: src.admin_source_type || 'Document',
+                  type: 'application/octet-stream',
+                  size: 0,
+                  fileUrl: src.file_url,
+                  adminSourceId: src.admin_source_id,
+                  docLinkId: src.doc_link_id ?? undefined,
+                };
+              });
             for (const rrr of record.rrrs || []) {
               const entryId = `BU-${record.ba_unit_id}`;
               if (rrr.rrr_id) this.fetchedRRRMap.set(entryId, rrr.rrr_id);
@@ -1145,19 +1154,19 @@ export class SidePanelComponent {
 
           // Map DB-backed apartment units → BuildingUnit[]
           const dbUnits: BuildingUnit[] = (unitsData?.units ?? []).map((u: any) => ({
-            unitId:           String(u.su_id),
-            parentBuilding:   String(su_id),
-            floorNumber:      u.floor_no ?? 0,
-            unitType:         this.mapLegalSpaceTypeToUnitType(u.building_unit_type, u.bld_property_type),
-            legalSpaceType:   u.building_unit_type ?? 'UNASSIGNED',
+            unitId: String(u.su_id),
+            parentBuilding: String(su_id),
+            floorNumber: u.floor_no ?? 0,
+            unitType: this.mapLegalSpaceTypeToUnitType(u.building_unit_type, u.bld_property_type),
+            legalSpaceType: u.building_unit_type ?? 'UNASSIGNED',
             postalAddressRef: u.postal_ad_build ?? '',
-            boundary:         u.geom_3d_wkt ?? '',
-            accessType:       AccessType.COR,
-            cadastralRef:     u.cadastral_id ?? u.apt_name ?? '',
-            floorArea:        u.floor_area ?? 0,
+            boundary: u.geom_3d_wkt ?? '',
+            accessType: AccessType.COR,
+            cadastralRef: u.cadastral_id ?? u.apt_name ?? '',
+            floorArea: u.floor_area ?? 0,
             registrationDate: u.registration_date ?? '',
-            primaryUse:       (u.ext_builduse_type as PrimaryUse) ?? PrimaryUse.RES,
-            rooms:            Array.isArray(u.component_units) ? u.component_units : [],
+            primaryUse: (u.ext_builduse_type as PrimaryUse) ?? PrimaryUse.RES,
+            rooms: Array.isArray(u.component_units) ? u.component_units : [],
             cadastralCertificates: [],
             physicalAttributes: {
               constructionYear: u.construction_year ?? 0,
@@ -1180,8 +1189,13 @@ export class SidePanelComponent {
               sanitationGully: u.utility?.sani_gully ?? '',
               garbageDisposal: u.utility?.garbage_dispose ?? '',
             },
-            tax:  { taxUnitArea: u.floor_area ?? 0, assessedValue: 0, lastValuationDate: '', taxDue: 0 },
-            rrr:  { entries: [] },
+            tax: {
+              taxUnitArea: u.floor_area ?? 0,
+              assessedValue: 0,
+              lastValuationDate: '',
+              taxDue: 0,
+            },
+            rrr: { entries: [] },
           }));
 
           this.currentBuildingInfo.set({
@@ -1355,7 +1369,6 @@ export class SidePanelComponent {
     }
 
     this.saveBuildingUnits(info, Number(su_id));
-
   }
 
   private saveBuildingUnits(info: BuildingInfo, parentSuId: number): void {
@@ -1413,9 +1426,9 @@ export class SidePanelComponent {
               taxPayload['date_of_valuation'] = unit.tax.lastValuationDate;
 
             const taxSave$ = Object.keys(taxPayload).length
-              ? this.apiService.updateTaxAndAssessmentInfo(unitSuId, taxPayload, 'building-unit').pipe(
-                  catchError(() => of(null)),
-                )
+              ? this.apiService
+                  .updateTaxAndAssessmentInfo(unitSuId, taxPayload, 'building-unit')
+                  .pipe(catchError(() => of(null)))
               : of(null);
 
             return taxSave$.pipe(
@@ -1470,7 +1483,11 @@ export class SidePanelComponent {
         ...curr,
         units: curr.units.map((unit) =>
           unit.unitId === localUnitId
-            ? { ...unit, unitId: String(backendSuId), parentBuilding: String(this.selected_feature_ID || unit.parentBuilding) }
+            ? {
+                ...unit,
+                unitId: String(backendSuId),
+                parentBuilding: String(this.selected_feature_ID || unit.parentBuilding),
+              }
             : unit,
         ),
       };
@@ -1643,14 +1660,16 @@ export class SidePanelComponent {
     const entries: RRREntry[] = [];
     const records = rrrData?.records || [];
     for (const record of records) {
-      const docs = (record.admin_sources || []).filter((src: any) => !!src.file_url).map((src: any) => ({
-        name: src.admin_source_type || 'Document',
-        type: 'application/octet-stream',
-        size: 0,
-        fileUrl: src.file_url,
-        adminSourceId: src.admin_source_id,
-        docLinkId: src.doc_link_id ?? undefined,
-      }));
+      const docs = (record.admin_sources || [])
+        .filter((src: any) => !!src.file_url)
+        .map((src: any) => ({
+          name: src.admin_source_type || 'Document',
+          type: 'application/octet-stream',
+          size: 0,
+          fileUrl: src.file_url,
+          adminSourceId: src.admin_source_id,
+          docLinkId: src.doc_link_id ?? undefined,
+        }));
       for (const rrr of record.rrrs || []) {
         const primaryParty = (rrr.parties || [])[0];
         entries.push({
@@ -1716,13 +1735,18 @@ export class SidePanelComponent {
     const scopedRequests = [];
 
     const scopedAdminPayload: Record<string, any> = {};
-    if (changed('identification.parcelType')) scopedAdminPayload['sl_land_type'] = info.identification.parcelType;
-    if (changed('identification.tenureType')) scopedAdminPayload['tenure_type'] = info.identification.tenureType;
-    if (changed('identification.cadastralRef')) scopedAdminPayload['land_name'] = info.identification.cadastralRef;
-    if (changed('physical.accessRoad')) scopedAdminPayload['access_road'] = info.physical.accessRoad ? 'Yes' : 'No';
+    if (changed('identification.parcelType'))
+      scopedAdminPayload['sl_land_type'] = info.identification.parcelType;
+    if (changed('identification.tenureType'))
+      scopedAdminPayload['tenure_type'] = info.identification.tenureType;
+    if (changed('identification.cadastralRef'))
+      scopedAdminPayload['land_name'] = info.identification.cadastralRef;
+    if (changed('physical.accessRoad'))
+      scopedAdminPayload['access_road'] = info.physical.accessRoad ? 'Yes' : 'No';
     if (changed('identification.registrationDate'))
       scopedAdminPayload['registration_date'] = info.identification.registrationDate || null;
-    if (changed('identification.parcelStatus')) scopedAdminPayload['parcel_status'] = info.identification.parcelStatus;
+    if (changed('identification.parcelStatus'))
+      scopedAdminPayload['parcel_status'] = info.identification.parcelStatus;
     if (changed('relationships.adjacentParcels'))
       scopedAdminPayload['adjacent_parcels'] = info.relationships.adjacentParcels || null;
     if (changed('relationships.parentParcel'))
@@ -1732,113 +1756,154 @@ export class SidePanelComponent {
     if (changed('relationships.partOfEstate'))
       scopedAdminPayload['part_of_estate'] = info.relationships.partOfEstate || null;
     if (hasPayload(scopedAdminPayload)) {
-      scopedRequests.push(this.apiService.updateAdministrativeInfo(su_id, scopedAdminPayload, 'land').pipe(
-        catchError((e) => {
-          console.error('[Save] admin info error:', e);
-          return of(null);
-        }),
-      ));
+      scopedRequests.push(
+        this.apiService.updateAdministrativeInfo(su_id, scopedAdminPayload, 'land').pipe(
+          catchError((e) => {
+            console.error('[Save] admin info error:', e);
+            return of(null);
+          }),
+        ),
+      );
     }
 
     const scopedOverviewPayload: Record<string, any> = {};
     if (changed('spatial.area')) scopedOverviewPayload['area'] = info.spatial.area;
     if (changed('spatial.perimeter')) scopedOverviewPayload['perimeter'] = info.spatial.perimeter;
-    if (changed('identification.landUse')) scopedOverviewPayload['ext_landuse_type'] = info.identification.landUse;
+    if (changed('identification.landUse'))
+      scopedOverviewPayload['ext_landuse_type'] = info.identification.landUse;
     if (changed('spatial.centroidLon') || changed('spatial.centroidLat'))
-      scopedOverviewPayload['reference_coordinate'] = `${info.spatial.centroidLon},${info.spatial.centroidLat}`;
+      scopedOverviewPayload['reference_coordinate'] =
+        `${info.spatial.centroidLon},${info.spatial.centroidLat}`;
     if (changed('spatial.geometryType'))
-      scopedOverviewPayload['dimension_2d_3d'] = info.spatial.geometryType?.includes('3') ? '3D' : '2D';
-    if (changed('spatial.boundaryType')) scopedOverviewPayload['boundary_type'] = info.spatial.boundaryType;
+      scopedOverviewPayload['dimension_2d_3d'] = info.spatial.geometryType?.includes('3')
+        ? '3D'
+        : '2D';
+    if (changed('spatial.boundaryType'))
+      scopedOverviewPayload['boundary_type'] = info.spatial.boundaryType;
     if (changed('spatial.crs')) scopedOverviewPayload['crs'] = info.spatial.crs;
     if (hasPayload(scopedOverviewPayload)) {
-      scopedRequests.push(this.apiService.updateLandOverviewInfo(su_id, scopedOverviewPayload, 'land').pipe(
-        catchError((e) => {
-          console.error('[Save] overview error:', e);
-          return of(null);
-        }),
-      ));
+      scopedRequests.push(
+        this.apiService.updateLandOverviewInfo(su_id, scopedOverviewPayload, 'land').pipe(
+          catchError((e) => {
+            console.error('[Save] overview error:', e);
+            return of(null);
+          }),
+        ),
+      );
     }
 
     const scopedTaxPayload: Record<string, any> = {};
     if (changed('valuation.landValue')) scopedTaxPayload['land_value'] = info.valuation.landValue;
-    if (changed('valuation.annualTax')) scopedTaxPayload['tax_annual_value'] = info.valuation.annualTax;
+    if (changed('valuation.annualTax'))
+      scopedTaxPayload['tax_annual_value'] = info.valuation.annualTax;
     if (changed('valuation.lastAssessmentDate'))
       scopedTaxPayload['date_of_valuation'] = info.valuation.lastAssessmentDate;
-    if (changed('valuation.marketValue')) scopedTaxPayload['market_value'] = info.valuation.marketValue;
+    if (changed('valuation.marketValue'))
+      scopedTaxPayload['market_value'] = info.valuation.marketValue;
     if (changed('valuation.taxStatus')) scopedTaxPayload['tax_status'] = info.valuation.taxStatus;
     if (hasPayload(scopedTaxPayload)) {
-      scopedRequests.push(this.apiService.updateTaxAndAssessmentInfo(su_id, scopedTaxPayload, 'land').pipe(
-        catchError((e) => {
-          console.error('[Save] tax error:', e);
-          return of(null);
-        }),
-      ));
+      scopedRequests.push(
+        this.apiService.updateTaxAndAssessmentInfo(su_id, scopedTaxPayload, 'land').pipe(
+          catchError((e) => {
+            console.error('[Save] tax error:', e);
+            return of(null);
+          }),
+        ),
+      );
     }
 
     const scopedPhysicalEnvPayload: Record<string, any> = {};
-    if (changed('physical.elevation')) scopedPhysicalEnvPayload['elevation'] = info.physical.elevation;
+    if (changed('physical.elevation'))
+      scopedPhysicalEnvPayload['elevation'] = info.physical.elevation;
     if (changed('physical.slope')) scopedPhysicalEnvPayload['slope'] = info.physical.slope;
-    if (changed('physical.soilType')) scopedPhysicalEnvPayload['soil_type'] = info.physical.soilType;
-    if (changed('physical.floodZone')) scopedPhysicalEnvPayload['flood_zone'] = info.physical.floodZone;
+    if (changed('physical.soilType'))
+      scopedPhysicalEnvPayload['soil_type'] = info.physical.soilType;
+    if (changed('physical.floodZone'))
+      scopedPhysicalEnvPayload['flood_zone'] = info.physical.floodZone;
     if (changed('physical.vegetationCover'))
       scopedPhysicalEnvPayload['vegetation_cover'] = info.physical.vegetationCover;
     if (hasPayload(scopedPhysicalEnvPayload)) {
-      scopedRequests.push(this.apiService.updatePhysicalEnvInfo(su_id, scopedPhysicalEnvPayload).pipe(
-        catchError((e) => {
-          console.error('[Save] physical error:', e);
-          return of(null);
-        }),
-      ));
+      scopedRequests.push(
+        this.apiService.updatePhysicalEnvInfo(su_id, scopedPhysicalEnvPayload).pipe(
+          catchError((e) => {
+            console.error('[Save] physical error:', e);
+            return of(null);
+          }),
+        ),
+      );
     }
 
     const scopedZoningPayload: Record<string, any> = {};
-    if (changed('zoning.zoningCategory')) scopedZoningPayload['zoning_category'] = info.zoning.zoningCategory;
-    if (changed('zoning.maxBuildingHeight')) scopedZoningPayload['max_building_height'] = info.zoning.maxBuildingHeight;
-    if (changed('zoning.maxCoverage')) scopedZoningPayload['max_coverage'] = info.zoning.maxCoverage;
+    if (changed('zoning.zoningCategory'))
+      scopedZoningPayload['zoning_category'] = info.zoning.zoningCategory;
+    if (changed('zoning.maxBuildingHeight'))
+      scopedZoningPayload['max_building_height'] = info.zoning.maxBuildingHeight;
+    if (changed('zoning.maxCoverage'))
+      scopedZoningPayload['max_coverage'] = info.zoning.maxCoverage;
     if (changed('zoning.maxFAR')) scopedZoningPayload['max_far'] = info.zoning.maxFAR;
-    if (changed('zoning.setbackFront')) scopedZoningPayload['setback_front'] = info.zoning.setbackFront;
-    if (changed('zoning.setbackRear')) scopedZoningPayload['setback_rear'] = info.zoning.setbackRear;
-    if (changed('zoning.setbackSide')) scopedZoningPayload['setback_side'] = info.zoning.setbackSide;
-    if (changed('zoning.specialOverlay')) scopedZoningPayload['special_overlay'] = info.zoning.specialOverlay;
+    if (changed('zoning.setbackFront'))
+      scopedZoningPayload['setback_front'] = info.zoning.setbackFront;
+    if (changed('zoning.setbackRear'))
+      scopedZoningPayload['setback_rear'] = info.zoning.setbackRear;
+    if (changed('zoning.setbackSide'))
+      scopedZoningPayload['setback_side'] = info.zoning.setbackSide;
+    if (changed('zoning.specialOverlay'))
+      scopedZoningPayload['special_overlay'] = info.zoning.specialOverlay;
     if (hasPayload(scopedZoningPayload)) {
-      scopedRequests.push(this.apiService.updateZoningInfo(su_id, scopedZoningPayload).pipe(
-        catchError((e) => {
-          console.error('[Save] zoning error:', e);
-          return of(null);
-        }),
-      ));
+      scopedRequests.push(
+        this.apiService.updateZoningInfo(su_id, scopedZoningPayload).pipe(
+          catchError((e) => {
+            console.error('[Save] zoning error:', e);
+            return of(null);
+          }),
+        ),
+      );
     }
 
     const scopedUtilPayload: Record<string, any> = {};
-    if (changed('physical.waterSupply')) scopedUtilPayload['water_supply'] = info.physical.waterSupply;
-    if (changed('physical.electricity')) scopedUtilPayload['electricity'] = info.physical.electricity;
-    if (changed('physical.drainageSystem')) scopedUtilPayload['drainage_system'] = info.physical.drainageSystem;
-    if (changed('physical.sanitationSewer')) scopedUtilPayload['sanitation_sewer'] = info.physical.sanitationSewer;
-    if (changed('physical.sanitationGully')) scopedUtilPayload['sanitation_gully'] = info.physical.sanitationGully;
-    if (changed('physical.garbageDisposal')) scopedUtilPayload['garbage_disposal'] = info.physical.garbageDisposal;
+    if (changed('physical.waterSupply'))
+      scopedUtilPayload['water_supply'] = info.physical.waterSupply;
+    if (changed('physical.electricity'))
+      scopedUtilPayload['electricity'] = info.physical.electricity;
+    if (changed('physical.drainageSystem'))
+      scopedUtilPayload['drainage_system'] = info.physical.drainageSystem;
+    if (changed('physical.sanitationSewer'))
+      scopedUtilPayload['sanitation_sewer'] = info.physical.sanitationSewer;
+    if (changed('physical.sanitationGully'))
+      scopedUtilPayload['sanitation_gully'] = info.physical.sanitationGully;
+    if (changed('physical.garbageDisposal'))
+      scopedUtilPayload['garbage_disposal'] = info.physical.garbageDisposal;
     if (hasPayload(scopedUtilPayload)) {
-      scopedRequests.push(this.apiService.updateITUtilInfo(su_id, scopedUtilPayload, 'land').pipe(
-        catchError((e) => {
-          console.error('[Save] utility error:', e);
-          return of(null);
-        }),
-      ));
+      scopedRequests.push(
+        this.apiService.updateITUtilInfo(su_id, scopedUtilPayload, 'land').pipe(
+          catchError((e) => {
+            console.error('[Save] utility error:', e);
+            return of(null);
+          }),
+        ),
+      );
     }
 
     const scopedMetadataPayload: Record<string, any> = {};
-    if (changed('metadata.surveyMethod')) scopedMetadataPayload['spatial_source_type'] = info.metadata.surveyMethod;
-    if (changed('metadata.sourceDocument')) scopedMetadataPayload['source_id'] = info.metadata.sourceDocument;
-    if (changed('metadata.accuracyLevel')) scopedMetadataPayload['description'] = info.metadata.accuracyLevel;
+    if (changed('metadata.surveyMethod'))
+      scopedMetadataPayload['spatial_source_type'] = info.metadata.surveyMethod;
+    if (changed('metadata.sourceDocument'))
+      scopedMetadataPayload['source_id'] = info.metadata.sourceDocument;
+    if (changed('metadata.accuracyLevel'))
+      scopedMetadataPayload['description'] = info.metadata.accuracyLevel;
     if (changed('metadata.lastUpdated'))
       scopedMetadataPayload['date_accept'] = info.metadata.lastUpdated?.split('T')[0] || null;
-    if (changed('metadata.responsibleParty')) scopedMetadataPayload['surveyor_name'] = info.metadata.responsibleParty;
+    if (changed('metadata.responsibleParty'))
+      scopedMetadataPayload['surveyor_name'] = info.metadata.responsibleParty;
     if (hasPayload(scopedMetadataPayload)) {
-      scopedRequests.push(this.apiService.updateLandMetadata(su_id, scopedMetadataPayload).pipe(
-        catchError((e) => {
-          console.error('[Save] metadata error:', e);
-          return of(null);
-        }),
-      ));
+      scopedRequests.push(
+        this.apiService.updateLandMetadata(su_id, scopedMetadataPayload).pipe(
+          catchError((e) => {
+            console.error('[Save] metadata error:', e);
+            return of(null);
+          }),
+        ),
+      );
     }
 
     if (!scopedRequests.length) {
@@ -1990,7 +2055,6 @@ export class SidePanelComponent {
       .updateLandMetadata(su_id, metadataPayload)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
-
   }
 
   // ─── RRR Sub-record Sync Helper ────────────────────────
@@ -2109,7 +2173,9 @@ export class SidePanelComponent {
             (r: any) => !localResponsibilityIds.has(r.id),
           );
           const delObs = toDelete.map((r: any) =>
-            this.apiService.deleteRRRResponsibility(ba_unit_id, r.id).pipe(catchError(() => of(null))),
+            this.apiService
+              .deleteRRRResponsibility(ba_unit_id, r.id)
+              .pipe(catchError(() => of(null))),
           );
           return delObs.length > 0 ? forkJoin(delObs) : of([]);
         }),
@@ -2195,7 +2261,9 @@ export class SidePanelComponent {
   handleRRRCreate(event: { suId: number | string; entry: RRREntry; unitIndex?: number }): void {
     const { suId, entry, unitIndex } = event;
     if (unitIndex !== undefined && !Number.isFinite(Number(suId))) {
-      this.notificationService.showError('Please save the building unit before adding RRR details.');
+      this.notificationService.showError(
+        'Please save the building unit before adding RRR details.',
+      );
       return;
     }
     const localRrrId = entry.rrrId;

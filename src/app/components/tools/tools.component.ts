@@ -207,7 +207,9 @@ export class ToolsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.cleanupUtilityInteractions();
     if (this.contextMenuHandler) {
-      this.mapService.mapInstance?.getViewport().removeEventListener('contextmenu', this.contextMenuHandler, true);
+      this.mapService.mapInstance
+        ?.getViewport()
+        .removeEventListener('contextmenu', this.contextMenuHandler, true);
     }
     this.drawService.setActiveTool(null);
   }
@@ -1652,7 +1654,8 @@ export class ToolsComponent implements OnInit, OnDestroy {
             this.addGeoTagFeature(tagRow);
             this.notifications.showSuccess(`${tagRow.label} tag placed.`);
           },
-          error: (err) => this.notifications.showError(err?.error?.error || 'Could not save GeoTag.'),
+          error: (err) =>
+            this.notifications.showError(err?.error?.error || 'Could not save GeoTag.'),
         });
     });
   }

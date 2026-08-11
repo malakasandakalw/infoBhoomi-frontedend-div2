@@ -25,7 +25,12 @@
       @for (dataItem of LayerList | sortArray: 'layer_name'; track dataItem.layer_id) {
         <!-- Verify this condition: Does group_name *contain* 'default' or *equal* 'default'? -->
         @if (dataItem.group_name?.includes('default')) {
-          <div class="tb_row" [class.disabled]="(dataItem.layer_id === 3 || dataItem.layer_id === 12) && isBuildingsDisabled">
+          <div
+            class="tb_row"
+            [class.disabled]="
+              (dataItem.layer_id === 3 || dataItem.layer_id === 12) && isBuildingsDisabled
+            "
+          >
             <!-- Removed empty td -->
             <div class="name_checkbox_2 d-flex items-center">
               <mat-icon
@@ -76,7 +81,11 @@
                   matTooltipPosition="above"
                   [ngStyle]="{
                     opacity:
-                      dataItem.view && !((dataItem.layer_id === 3 || dataItem.layer_id === 12) && isBuildingsDisabled)
+                      dataItem.view &&
+                      !(
+                        (dataItem.layer_id === 3 || dataItem.layer_id === 12) &&
+                        isBuildingsDisabled
+                      )
                         ? '1'
                         : '1',
                   }"

@@ -12,7 +12,12 @@ import {
   inject,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -124,7 +129,10 @@ export class City3dViewerComponent implements AfterViewInit, OnDestroy {
       this.parcelSuId = data.parcelSuId;
       this.title = data.parcelLabel ? `3D View — ${data.parcelLabel}` : 'Parcel 3D View';
     }
-    qa('CityViewer', 'open', { parcelSuId: this.parcelSuId, mode: this.parcelSuId ? 'parcel' : 'city' });
+    qa('CityViewer', 'open', {
+      parcelSuId: this.parcelSuId,
+      mode: this.parcelSuId ? 'parcel' : 'city',
+    });
   }
 
   ngAfterViewInit(): void {
@@ -132,7 +140,10 @@ export class City3dViewerComponent implements AfterViewInit, OnDestroy {
       this.initScene();
       qa('CityViewer', 'scene-init ok', {
         canvas: !!this.renderer,
-        size: [this.sceneContainer.nativeElement.clientWidth, this.sceneContainer.nativeElement.clientHeight],
+        size: [
+          this.sceneContainer.nativeElement.clientWidth,
+          this.sceneContainer.nativeElement.clientHeight,
+        ],
         webgl: !!this.renderer?.getContext(),
       });
     } catch (e) {
@@ -175,7 +186,8 @@ export class City3dViewerComponent implements AfterViewInit, OnDestroy {
         const originSrc =
           this.parcelCentroid ??
           this.firstParcelCentroid(parcels) ??
-          (list.find((b: any) => b.centroid)?.centroid ?? null);
+          list.find((b: any) => b.centroid)?.centroid ??
+          null;
         if (originSrc) {
           this.originLon = originSrc[0];
           this.originLat = originSrc[1];
@@ -233,7 +245,8 @@ export class City3dViewerComponent implements AfterViewInit, OnDestroy {
     for (const p of parcels) {
       const rings = this.extractPolygonRings(p.geojson);
       if (rings.length && rings[0].length) {
-        let sx = 0, sy = 0;
+        let sx = 0,
+          sy = 0;
         for (const [lon, lat] of rings[0]) {
           sx += lon;
           sy += lat;
@@ -321,14 +334,18 @@ export class City3dViewerComponent implements AfterViewInit, OnDestroy {
     // pad the bbox a little so context extends beyond the parcels
     const padX = (this.groundMaxX - this.groundMinX) * 0.15 + 20;
     const padY = (this.groundMaxY - this.groundMinY) * 0.15 + 20;
-    const minX = this.groundMinX - padX, maxX = this.groundMaxX + padX;
-    const minY = this.groundMinY - padY, maxY = this.groundMaxY + padY;
-    const w = maxX - minX, h = maxY - minY;
+    const minX = this.groundMinX - padX,
+      maxX = this.groundMaxX + padX;
+    const minY = this.groundMinY - padY,
+      maxY = this.groundMaxY + padY;
+    const w = maxX - minX,
+      h = maxY - minY;
     if (w <= 0 || h <= 0) return;
 
     const geo = new THREE.PlaneGeometry(w, h);
     const mat = new THREE.MeshStandardMaterial({
-      color: 0xe8edf2, side: THREE.DoubleSide,
+      color: 0xe8edf2,
+      side: THREE.DoubleSide,
     });
     const plane = new THREE.Mesh(geo, mat);
     // sit the OSM basemap well below the parcel slabs (z=0.04) so the two
@@ -352,7 +369,10 @@ export class City3dViewerComponent implements AfterViewInit, OnDestroy {
    * texture, UV-mapped so the parcel sits correctly on the map imagery.
    */
   private loadOsmTexture(
-    minX: number, minY: number, maxX: number, maxY: number,
+    minX: number,
+    minY: number,
+    maxX: number,
+    maxY: number,
     mat: THREE.MeshStandardMaterial,
   ): void {
     // bbox back to lon/lat
@@ -360,8 +380,10 @@ export class City3dViewerComponent implements AfterViewInit, OnDestroy {
     const lon2 = this.originLon + maxX / this.mPerDegLon;
     const lat1 = this.originLat + minY / this.mPerDegLat;
     const lat2 = this.originLat + maxY / this.mPerDegLat;
-    const west = Math.min(lon1, lon2), east = Math.max(lon1, lon2);
-    const south = Math.min(lat1, lat2), north = Math.max(lat1, lat2);
+    const west = Math.min(lon1, lon2),
+      east = Math.max(lon1, lon2);
+    const south = Math.min(lat1, lat2),
+      north = Math.max(lat1, lat2);
 
     const lon2tileX = (lon: number, z: number) => ((lon + 180) / 360) * Math.pow(2, z);
     const lat2tileY = (lat: number, z: number) => {
@@ -380,7 +402,8 @@ export class City3dViewerComponent implements AfterViewInit, OnDestroy {
     const x1 = Math.floor(lon2tileX(east, z));
     const y0 = Math.floor(lat2tileY(north, z)); // north = smaller tile Y
     const y1 = Math.floor(lat2tileY(south, z));
-    const cols = x1 - x0 + 1, rows = y1 - y0 + 1;
+    const cols = x1 - x0 + 1,
+      rows = y1 - y0 + 1;
     const TS = 256;
 
     const canvas = document.createElement('canvas');
@@ -396,7 +419,8 @@ export class City3dViewerComponent implements AfterViewInit, OnDestroy {
     const total = cols * rows;
     const applyWhenDone = () => {
       // crop the mosaic to the exact bbox so it lines up with the slab
-      const mosaicWestX = x0, mosaicNorthY = y0;
+      const mosaicWestX = x0,
+        mosaicNorthY = y0;
       const u0 = lon2tileX(west, z) - mosaicWestX;
       const u1 = lon2tileX(east, z) - mosaicWestX;
       const v0 = lat2tileY(north, z) - mosaicNorthY;
@@ -404,10 +428,19 @@ export class City3dViewerComponent implements AfterViewInit, OnDestroy {
       const crop = document.createElement('canvas');
       crop.width = Math.max(1, Math.round((u1 - u0) * TS));
       crop.height = Math.max(1, Math.round((v1 - v0) * TS));
-      crop.getContext('2d')!.drawImage(
-        canvas, u0 * TS, v0 * TS, (u1 - u0) * TS, (v1 - v0) * TS,
-        0, 0, crop.width, crop.height,
-      );
+      crop
+        .getContext('2d')!
+        .drawImage(
+          canvas,
+          u0 * TS,
+          v0 * TS,
+          (u1 - u0) * TS,
+          (v1 - v0) * TS,
+          0,
+          0,
+          crop.width,
+          crop.height,
+        );
       const tex = new THREE.CanvasTexture(crop);
       tex.colorSpace = THREE.SRGBColorSpace;
       mat.map = tex;
@@ -452,10 +485,17 @@ export class City3dViewerComponent implements AfterViewInit, OnDestroy {
         if (cityjson && this.drawBuilding(b, cityjson)) {
           b.loaded = true;
           drawn++;
-          qa('CityViewer', 'building drawn', { su_id: b.su_id, objects: objCount, vertices: vtxCount });
+          qa('CityViewer', 'building drawn', {
+            su_id: b.su_id,
+            objects: objCount,
+            vertices: vtxCount,
+          });
         } else {
           qaErr('CityViewer', 'building NOT drawn (no cityjson or no meshes)', {
-            su_id: b.su_id, hasCityjson: !!cityjson, objects: objCount, vertices: vtxCount,
+            su_id: b.su_id,
+            hasCityjson: !!cityjson,
+            objects: objCount,
+            vertices: vtxCount,
           });
         }
       }
@@ -463,12 +503,13 @@ export class City3dViewerComponent implements AfterViewInit, OnDestroy {
       this.statusMsg = drawn > 0 ? `${drawn} building(s) loaded.` : 'No renderable buildings.';
       qa('CityViewer', 'load complete', { requested: this.buildings.length, drawn });
       // right-click mode: zoom to the focus parcel's building(s); else frame whole city
-      const focusBuilding = this.parcelSuId != null
-        ? this.buildings.find((b) => this.buildingWorldPos.has(b.su_id))
-        : undefined;
+      const focusBuilding =
+        this.parcelSuId != null
+          ? this.buildings.find((b) => this.buildingWorldPos.has(b.su_id))
+          : undefined;
       const focusPos = focusBuilding ? this.buildingWorldPos.get(focusBuilding.su_id) : undefined;
       if (focusPos) {
-        this.frameScene();   // set sensible far/near first
+        this.frameScene(); // set sensible far/near first
         this.flyTo(focusPos);
       } else {
         this.frameScene();

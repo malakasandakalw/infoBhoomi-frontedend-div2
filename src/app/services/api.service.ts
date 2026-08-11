@@ -72,17 +72,15 @@ export class APIsService {
     if (!this._permCache.has(key)) {
       this._permCache.set(
         key,
-        this.http
-          .post(this.GET_PERMISSIONS, { permission_id: ids }, { headers: this.h() })
-          .pipe(
-            // Don't let a transient failure stay cached: evict the key so the
-            // next caller retries instead of replaying a cached error/empty.
-            catchError((err) => {
-              this._permCache.delete(key);
-              return throwError(() => err);
-            }),
-            shareReplay(1),
-          ),
+        this.http.post(this.GET_PERMISSIONS, { permission_id: ids }, { headers: this.h() }).pipe(
+          // Don't let a transient failure stay cached: evict the key so the
+          // next caller retries instead of replaying a cached error/empty.
+          catchError((err) => {
+            this._permCache.delete(key);
+            return throwError(() => err);
+          }),
+          shareReplay(1),
+        ),
       );
     }
     return this._permCache.get(key)!;
@@ -666,9 +664,13 @@ export class APIsService {
       return this.http.post(`${this.baseUrl}rrr_data_save/`, formData, { headers: this.h(false) });
     }
     // Plain JSON object path (used by rrr-panal dialog)
-    return this.http.post(`${this.baseUrl}rrr_data_save/`, { ...formData, user_id: userId }, {
-      headers: this.h(true),
-    });
+    return this.http.post(
+      `${this.baseUrl}rrr_data_save/`,
+      { ...formData, user_id: userId },
+      {
+        headers: this.h(true),
+      },
+    );
   }
 
   patchAdminSource(adminSourceId: number, formData: FormData): Observable<any> {
@@ -724,18 +726,15 @@ export class APIsService {
 
   /** Search soft-deleted parcels (no longer on the map) by su_id or label. */
   searchDeletedParcels(query: string): Observable<any> {
-    return this.http.get(
-      `${this.baseUrl}deleted-parcels/?q=${encodeURIComponent(query)}`,
-      { headers: this.h() },
-    );
+    return this.http.get(`${this.baseUrl}deleted-parcels/?q=${encodeURIComponent(query)}`, {
+      headers: this.h(),
+    });
   }
 
   restoreParcelHistory(historyId: string | number, payload: { reason: string }): Observable<any> {
-    return this.http.post(
-      `${this.baseUrl}parcel-history/restore/id=${historyId}/`,
-      payload,
-      { headers: this.h() },
-    );
+    return this.http.post(`${this.baseUrl}parcel-history/restore/id=${historyId}/`, payload, {
+      headers: this.h(),
+    });
   }
 
   restoreParcelGeometry(
@@ -750,11 +749,9 @@ export class APIsService {
   }
 
   restoreParcelRRR(historyId: string | number, payload: { reason: string }): Observable<any> {
-    return this.http.post(
-      `${this.baseUrl}parcel-history/restore-rrr/id=${historyId}/`,
-      payload,
-      { headers: this.h() },
-    );
+    return this.http.post(`${this.baseUrl}parcel-history/restore-rrr/id=${historyId}/`, payload, {
+      headers: this.h(),
+    });
   }
 
   undoParcelRectification(eventId: string | number, payload: { reason: string }): Observable<any> {
@@ -779,7 +776,10 @@ export class APIsService {
     return this.http.post(`${this.baseUrl}geotags/`, payload, { headers: this.h() });
   }
 
-  updateGeoTag(tagId: number | string, payload: { status?: boolean; note?: string | null }): Observable<any> {
+  updateGeoTag(
+    tagId: number | string,
+    payload: { status?: boolean; note?: string | null },
+  ): Observable<any> {
     return this.http.patch(`${this.baseUrl}geotags/${tagId}/`, payload, { headers: this.h() });
   }
 
@@ -1426,11 +1426,7 @@ export class APIsService {
    * Fold one or more unassigned pool room-units into an EXISTING apartment.
    * Unions their rooms + 3D solids into the apartment and marks them ABSORBED.
    */
-  assignUnitsToLsbu(payload: {
-    buildingSuId: number;
-    lsbuSuId: number;
-    unitSuIds: number[];
-  }) {
+  assignUnitsToLsbu(payload: { buildingSuId: number; lsbuSuId: number; unitSuIds: number[] }) {
     return this.http.post<{
       detail: string;
       lsbu_su_id: number;
@@ -1455,7 +1451,8 @@ export class APIsService {
   ) {
     const body: Record<string, any> = {};
     if (changes.aptName !== undefined) body['apt_name'] = changes.aptName;
-    if (changes.buildingUnitType !== undefined) body['building_unit_type'] = changes.buildingUnitType;
+    if (changes.buildingUnitType !== undefined)
+      body['building_unit_type'] = changes.buildingUnitType;
     if (changes.cadastralId !== undefined) body['cadastral_id'] = changes.cadastralId;
     return this.http.patch<{ detail: string }>(
       `${this.baseUrl}bld-unit/update/su_id=${suId}/`,

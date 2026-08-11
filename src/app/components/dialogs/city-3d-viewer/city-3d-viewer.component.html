@@ -30,7 +30,7 @@
           @for (hit of searchResults; track hit.su_id) {
             <li (click)="goToHit(hit)">
               <span class="city3d__chip">{{ hit.kind }}</span>
-              {{ hit.label || ('SU ' + hit.su_id) }}
+              {{ hit.label || 'SU ' + hit.su_id }}
             </li>
           }
         </ul>
@@ -40,7 +40,7 @@
       <ul class="city3d__list">
         @for (b of buildings; track b.su_id) {
           <li [class.dimmed]="!b.loaded" (click)="selectBuilding(b.su_id)">
-            {{ b.name || ('Building ' + b.su_id) }}
+            {{ b.name || 'Building ' + b.su_id }}
             @if (!b.loaded) {
               <span class="city3d__muted">(no model)</span>
             }

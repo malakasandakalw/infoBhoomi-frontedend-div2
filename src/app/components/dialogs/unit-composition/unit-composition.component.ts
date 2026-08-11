@@ -183,10 +183,12 @@ export class UnitCompositionComponent implements AfterViewInit, OnDestroy {
   private loadData(reselectSuId?: number): void {
     qa('UnitComp', 'load', { buildingSuId: this.data.buildingSuId });
     forkJoin({
-      units: this.api.listBuildingUnits(this.data.buildingSuId).pipe(catchError((e) => {
-        qaErr('UnitComp', 'listBuildingUnits FAILED', e?.error ?? e);
-        return of(null);
-      })),
+      units: this.api.listBuildingUnits(this.data.buildingSuId).pipe(
+        catchError((e) => {
+          qaErr('UnitComp', 'listBuildingUnits FAILED', e?.error ?? e);
+          return of(null);
+        }),
+      ),
       cj: this.api.load3DData(this.data.buildingSuId).pipe(
         map((res) => this.extractCityJson(res)),
         catchError((e) => {
@@ -223,7 +225,8 @@ export class UnitCompositionComponent implements AfterViewInit, OnDestroy {
         const found = this.apartments.find((a) => a.su_id === reselectSuId) ?? null;
         this.selectApartment(found, false);
       } else if (this.selectedApartment) {
-        const still = this.apartments.find((a) => a.su_id === this.selectedApartment!.su_id) ?? null;
+        const still =
+          this.apartments.find((a) => a.su_id === this.selectedApartment!.su_id) ?? null;
         this.selectApartment(still, false);
       } else {
         this.repaintAll();
@@ -292,7 +295,9 @@ export class UnitCompositionComponent implements AfterViewInit, OnDestroy {
       error: (err) => {
         this.saving = false;
         qaErr('UnitComp', `create FAILED (HTTP ${err?.status})`, err?.error ?? err);
-        this.notify.showError(err?.error?.error || err?.error?.detail || 'Could not create apartment.');
+        this.notify.showError(
+          err?.error?.error || err?.error?.detail || 'Could not create apartment.',
+        );
         this.cdr.markForCheck();
       },
     });
@@ -308,7 +313,10 @@ export class UnitCompositionComponent implements AfterViewInit, OnDestroy {
     if (clearPool) this.pool.forEach((u) => (u.selected = false));
     this.repaintAll();
     this.cdr.markForCheck();
-    qa('UnitComp', 'select apartment', { su_id: apt?.su_id ?? null, rooms: apt?.rooms?.length ?? 0 });
+    qa('UnitComp', 'select apartment', {
+      su_id: apt?.su_id ?? null,
+      rooms: apt?.rooms?.length ?? 0,
+    });
   }
 
   saveApartmentMeta(): void {
@@ -369,7 +377,9 @@ export class UnitCompositionComponent implements AfterViewInit, OnDestroy {
         this.saving = false;
         this.dirty = true;
         qa('UnitComp', 'assign OK', res);
-        this.notify.showSuccess(`Assigned ${picked.length} room(s) to ${this.apartmentLabel(apt)}.`);
+        this.notify.showSuccess(
+          `Assigned ${picked.length} room(s) to ${this.apartmentLabel(apt)}.`,
+        );
         this.loadData(apt.su_id);
       },
       error: (err) => {
@@ -557,9 +567,15 @@ export class UnitCompositionComponent implements AfterViewInit, OnDestroy {
     unit.selected = !unit.selected;
     this.repaintAll();
     const meshes = this.roomMeshes.get(unit.roomId)?.length ?? 0;
-    qa('UnitComp', 'list→3D highlight', { roomId: unit.roomId, selected: unit.selected, meshesForRoom: meshes });
+    qa('UnitComp', 'list→3D highlight', {
+      roomId: unit.roomId,
+      selected: unit.selected,
+      meshesForRoom: meshes,
+    });
     if (meshes === 0) {
-      qaErr('UnitComp', 'list→3D highlight: 0 meshes for this roomId (mesh not found)', { roomId: unit.roomId });
+      qaErr('UnitComp', 'list→3D highlight: 0 meshes for this roomId (mesh not found)', {
+        roomId: unit.roomId,
+      });
     }
   }
 

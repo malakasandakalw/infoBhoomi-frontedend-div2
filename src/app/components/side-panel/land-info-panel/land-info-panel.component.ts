@@ -108,8 +108,17 @@ export class LandInfoPanelComponent {
   rrrCreateRequested = output<{ suId: number | string; entry: RRREntry }>();
   rrrUpdateRequested = output<{ baUnitId: number; entry: RRREntry }>();
   rrrDeleteRequested = output<{ baUnitId: number }>();
-  rrrDocumentUploadRequested = output<{ baUnitId: number; file: File; name: string; entryIndex: number }>();
-  rrrDocumentDeleteRequested = output<{ docLinkId: number; entryIndex: number; docIndex: number }>();
+  rrrDocumentUploadRequested = output<{
+    baUnitId: number;
+    file: File;
+    name: string;
+    entryIndex: number;
+  }>();
+  rrrDocumentDeleteRequested = output<{
+    docLinkId: number;
+    entryIndex: number;
+    docIndex: number;
+  }>();
 
   // --- Enum Options ---
   landUseOptions = Object.values(LandUse);
@@ -468,7 +477,9 @@ export class LandInfoPanelComponent {
 
     if (entry.rrrId.startsWith('BU-')) {
       const baUnitId = Number(entry.rrrId.replace('BU-', ''));
-      if (confirm('Are you sure you want to terminate this RRR entry? This action cannot be undone.')) {
+      if (
+        confirm('Are you sure you want to terminate this RRR entry? This action cannot be undone.')
+      ) {
         this.rrrDeleteRequested.emit({ baUnitId });
       }
     } else {

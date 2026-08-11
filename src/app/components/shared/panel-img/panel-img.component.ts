@@ -6,7 +6,7 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  inject
+  inject,
 } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { HttpClient, HttpHeaders } from '@angular/common/http';

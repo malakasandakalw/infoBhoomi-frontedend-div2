@@ -192,7 +192,7 @@ export class Import3dComponent {
               building_su_id: body.building_su_id,
               footprint_created: body.footprint_created,
               units_created: body.units_created,
-              georeferencing: body.georeferencing,  // incl. method + fit_rms_m
+              georeferencing: body.georeferencing, // incl. method + fit_rms_m
             });
             this.notify.showSuccess(
               `Imported: footprint ${body.footprint_created ? 'created' : 'skipped'}, ` +

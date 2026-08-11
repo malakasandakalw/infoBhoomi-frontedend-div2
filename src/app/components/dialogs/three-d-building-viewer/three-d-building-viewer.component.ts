@@ -6,7 +6,7 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  inject
+  inject,
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
 import { APIsService } from '../../../services/api.service';

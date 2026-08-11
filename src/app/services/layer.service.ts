@@ -101,15 +101,13 @@ export class LayerService {
     // Reactively resolve buildings-disabled state from user role.
     // LayerService is constructed before user data is loaded from the token, so we
     // must subscribe to user$ and update whenever the user becomes available.
-    this.userService.user$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((user) => {
-        const role = user?.user_type || '';
-        const isDisabled = role !== 'admin' && role !== 'super_admin';
-        if (this.buildingsDisabledSubject.value !== isDisabled) {
-          this.buildingsDisabledSubject.next(isDisabled);
-        }
-      });
+    this.userService.user$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((user) => {
+      const role = user?.user_type || '';
+      const isDisabled = role !== 'admin' && role !== 'super_admin';
+      if (this.buildingsDisabledSubject.value !== isDisabled) {
+        this.buildingsDisabledSubject.next(isDisabled);
+      }
+    });
 
     this.mapService.mapInstance$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((map) => {
       this.mapInstance = map;
@@ -137,7 +135,8 @@ export class LayerService {
 
     // Restore the previously selected drawing layer so the select/modify filter
     // keeps working across page reloads without the user having to re-open the layer panel.
-    const savedLayerId = typeof window !== 'undefined' ? localStorage.getItem('selected_layer_id') : null;
+    const savedLayerId =
+      typeof window !== 'undefined' ? localStorage.getItem('selected_layer_id') : null;
     if (savedLayerId) {
       const parsed = parseInt(savedLayerId, 10);
       this.setSelectedCurrentLayerIdForDrawing(isNaN(parsed) ? savedLayerId : parsed);
@@ -223,7 +222,12 @@ export class LayerService {
     const userId = Number(user?.user_id) || 0;
     const layerRequest = { user_id: userId };
 
-    console.debug('[LayerService] Requesting geometry — user_id:', userId, '| layer IDs:', layerIds);
+    console.debug(
+      '[LayerService] Requesting geometry — user_id:',
+      userId,
+      '| layer IDs:',
+      layerIds,
+    );
 
     return this.http
       .post<API_LAYER_GEOM_RESPONSE>(
@@ -234,26 +238,27 @@ export class LayerService {
       .pipe(
         tap((response) => {
           if (!response || !response.features) {
-            console.error(
-              '[LayerService] Geometry endpoint returned a null/malformed response.',
-              { sentUserId: userId, response },
-            );
+            console.error('[LayerService] Geometry endpoint returned a null/malformed response.', {
+              sentUserId: userId,
+              response,
+            });
             return;
           }
 
           if (response.features.length === 0) {
-            console.warn(
-              '[LayerService] Geometry endpoint returned 0 features.',
-              {
-                sentUserId: userId,
-                cachedLayerIds: layerIds,
-                hint: 'Check that survey_rep_data_user/ filters by user_id and that records exist for this user.',
-              },
-            );
+            console.warn('[LayerService] Geometry endpoint returned 0 features.', {
+              sentUserId: userId,
+              cachedLayerIds: layerIds,
+              hint: 'Check that survey_rep_data_user/ filters by user_id and that records exist for this user.',
+            });
             return;
           }
 
-          console.debug('[LayerService] Received', response.features.length, 'features from backend.');
+          console.debug(
+            '[LayerService] Received',
+            response.features.length,
+            'features from backend.',
+          );
           // 3. Add features to their respective layers
           this._processAndAddFeatures(response.features);
         }),

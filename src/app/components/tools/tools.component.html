@@ -216,7 +216,10 @@
     [style.top.px]="geoTagContextMenu.y"
   >
     <strong>{{ geoTagContextMenu.feature?.get('label') }}</strong>
-    <small>Status: {{ geoTagContextMenu.feature?.get('status') === false ? 'Inactive' : 'Active' }}</small>
+    <small
+      >Status:
+      {{ geoTagContextMenu.feature?.get('status') === false ? 'Inactive' : 'Active' }}</small
+    >
     <button type="button" (click)="setGeoTagStatus(true)">Mark Active</button>
     <button type="button" (click)="setGeoTagStatus(false)">Mark Inactive</button>
     <button type="button" class="danger" (click)="deleteGeoTag()">Delete</button>

@@ -148,8 +148,19 @@ export class BuildingInfoPanelComponent {
   rrrCreateRequested = output<{ suId: number | string; entry: RRREntry; unitIndex?: number }>();
   rrrUpdateRequested = output<{ baUnitId: number; entry: RRREntry; unitIndex?: number }>();
   rrrDeleteRequested = output<{ baUnitId: number; unitIndex?: number }>();
-  rrrDocumentUploadRequested = output<{ baUnitId: number; file: File; name: string; entryIndex: number; unitIndex?: number }>();
-  rrrDocumentDeleteRequested = output<{ docLinkId: number; entryIndex: number; docIndex: number; unitIndex?: number }>();
+  rrrDocumentUploadRequested = output<{
+    baUnitId: number;
+    file: File;
+    name: string;
+    entryIndex: number;
+    unitIndex?: number;
+  }>();
+  rrrDocumentDeleteRequested = output<{
+    docLinkId: number;
+    entryIndex: number;
+    docIndex: number;
+    unitIndex?: number;
+  }>();
 
   // Enum option lists
   readonly legalStatusOptions = Object.values(LegalStatus);
@@ -179,7 +190,16 @@ export class BuildingInfoPanelComponent {
   ];
   readonly taxStatusOptions: TaxValuation['taxStatus'][] = ['pending', 'paid', 'overdue'];
   readonly utilityStatusOptions = ['Available', 'Not Available', 'Shared', 'Individual', 'Unknown'];
-  readonly wallTypeOptions = ['Brick', 'Concrete', 'Block', 'Timber', 'Steel', 'Glass', 'Mixed', 'Other'];
+  readonly wallTypeOptions = [
+    'Brick',
+    'Concrete',
+    'Block',
+    'Timber',
+    'Steel',
+    'Glass',
+    'Mixed',
+    'Other',
+  ];
   readonly legalSpaceTypeOptions = [
     'UNASSIGNED',
     'RESIDENTIAL',
@@ -413,9 +433,7 @@ export class BuildingInfoPanelComponent {
   }
 
   onRRRFieldChange(index: number, field: keyof RRREntry, value: any): void {
-    const entries = this.rrrEntries().map((e, i) =>
-      i === index ? { ...e, [field]: value } : e,
-    );
+    const entries = this.rrrEntries().map((e, i) => (i === index ? { ...e, [field]: value } : e));
     this.updateRRR(entries);
 
     const entry = entries[index];
@@ -474,7 +492,9 @@ export class BuildingInfoPanelComponent {
 
     if (entry.rrrId.startsWith('BU-')) {
       const baUnitId = Number(entry.rrrId.replace('BU-', ''));
-      if (confirm('Are you sure you want to terminate this RRR entry? This action cannot be undone.')) {
+      if (
+        confirm('Are you sure you want to terminate this RRR entry? This action cannot be undone.')
+      ) {
         this.rrrDeleteRequested.emit({ baUnitId });
       }
     } else {
@@ -887,7 +907,9 @@ export class BuildingInfoPanelComponent {
 
     if (entry.rrrId.startsWith('BU-')) {
       const baUnitId = Number(entry.rrrId.replace('BU-', ''));
-      if (confirm('Are you sure you want to terminate this RRR entry? This action cannot be undone.')) {
+      if (
+        confirm('Are you sure you want to terminate this RRR entry? This action cannot be undone.')
+      ) {
         this.rrrDeleteRequested.emit({ baUnitId, unitIndex });
       }
     } else {

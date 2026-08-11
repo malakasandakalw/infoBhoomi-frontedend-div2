@@ -4,7 +4,7 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  inject
+  inject,
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';

@@ -263,9 +263,7 @@ export const QUERY_CATEGORIES: Record<string, QueryCategory> = {
           // check (land_use != zoning) needs a column-vs-column comparison the current
           // engine does not support, so the backend returns parcels with the selected zone.
           layerIds: [1, 6],
-          toConditions: (p) => [
-            { field: 'zoning', operator: '=', value: String(p['zone_type']) },
-          ],
+          toConditions: (p) => [{ field: 'zoning', operator: '=', value: String(p['zone_type']) }],
           logic: 'AND',
         },
       },

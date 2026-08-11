@@ -572,7 +572,9 @@
                                         <span class="doc-name">{{ doc.name }}</span>
                                       }
                                       @if (!doc.fileUrl) {
-                                        <span class="doc-size">({{ formatFileSize(doc.size) }})</span>
+                                        <span class="doc-size"
+                                          >({{ formatFileSize(doc.size) }})</span
+                                        >
                                       }
                                       <button
                                         class="rrr-remove-btn"
@@ -847,9 +849,7 @@
                         (click)="toggleUnitExpand(unit.unitId); onUnitCardClick(unit)"
                       >
                         <div class="unit-main">
-                          <span class="unit-id">{{
-                            unit.cadastralRef || unit.unitId
-                          }}</span>
+                          <span class="unit-id">{{ unit.cadastralRef || unit.unitId }}</span>
                           <span class="rrr-type-badge">{{
                             unit.legalSpaceType || unitTypeDisplayMap[unit.unitType]
                           }}</span>
@@ -978,10 +978,14 @@
                                   <select
                                     class="field-select"
                                     [ngModel]="unit.legalSpaceType || 'UNASSIGNED'"
-                                    (ngModelChange)="onUnitFieldChange(ui, 'legalSpaceType', $event)"
+                                    (ngModelChange)="
+                                      onUnitFieldChange(ui, 'legalSpaceType', $event)
+                                    "
                                   >
                                     @for (opt of legalSpaceTypeOptions; track opt) {
-                                      <option [value]="opt">{{ legalSpaceTypeDisplayMap[opt] }}</option>
+                                      <option [value]="opt">
+                                        {{ legalSpaceTypeDisplayMap[opt] }}
+                                      </option>
                                     }
                                   </select>
                                 </td>
@@ -1044,7 +1048,9 @@
                                     type="text"
                                     class="field-input"
                                     [ngModel]="unit.postalAddressRef"
-                                    (ngModelChange)="onUnitFieldChange(ui, 'postalAddressRef', $event)"
+                                    (ngModelChange)="
+                                      onUnitFieldChange(ui, 'postalAddressRef', $event)
+                                    "
                                     placeholder="Postal delivery reference"
                                   />
                                 </td>
@@ -1064,10 +1070,16 @@
                                   </label>
                                   @if (unit.cadastralCertificates?.length) {
                                     <div class="unit-doc-list">
-                                      @for (doc of unit.cadastralCertificates; track di; let di = $index) {
+                                      @for (
+                                        doc of unit.cadastralCertificates;
+                                        track di;
+                                        let di = $index
+                                      ) {
                                         <div class="rrr-doc-chip">
                                           <span class="doc-name">{{ doc.name }}</span>
-                                          <span class="doc-size">({{ formatFileSize(doc.size) }})</span>
+                                          <span class="doc-size"
+                                            >({{ formatFileSize(doc.size) }})</span
+                                          >
                                           <button
                                             class="rrr-remove-btn"
                                             (click)="removeUnitCertificate(ui, di)"
@@ -1122,7 +1134,9 @@
                                     type="number"
                                     class="field-input"
                                     [ngModel]="unit.physicalAttributes?.constructionYear"
-                                    (ngModelChange)="onUnitPhysicalFieldChange(ui, 'constructionYear', $event)"
+                                    (ngModelChange)="
+                                      onUnitPhysicalFieldChange(ui, 'constructionYear', $event)
+                                    "
                                     min="1800"
                                     max="2099"
                                   />
@@ -1134,10 +1148,14 @@
                                   <select
                                     class="field-select"
                                     [ngModel]="unit.physicalAttributes?.structureType"
-                                    (ngModelChange)="onUnitPhysicalFieldChange(ui, 'structureType', $event)"
+                                    (ngModelChange)="
+                                      onUnitPhysicalFieldChange(ui, 'structureType', $event)
+                                    "
                                   >
                                     @for (opt of structureTypeOptions; track opt) {
-                                      <option [value]="opt">{{ structureTypeDisplayMap[opt] }}</option>
+                                      <option [value]="opt">
+                                        {{ structureTypeDisplayMap[opt] }}
+                                      </option>
                                     }
                                   </select>
                                 </td>
@@ -1148,7 +1166,9 @@
                                   <select
                                     class="field-select"
                                     [ngModel]="unit.physicalAttributes?.condition"
-                                    (ngModelChange)="onUnitPhysicalFieldChange(ui, 'condition', $event)"
+                                    (ngModelChange)="
+                                      onUnitPhysicalFieldChange(ui, 'condition', $event)
+                                    "
                                   >
                                     @for (opt of conditionOptions; track opt) {
                                       <option [value]="opt">{{ conditionDisplayMap[opt] }}</option>
@@ -1162,7 +1182,9 @@
                                   <select
                                     class="field-select"
                                     [ngModel]="unit.physicalAttributes?.roofType"
-                                    (ngModelChange)="onUnitPhysicalFieldChange(ui, 'roofType', $event)"
+                                    (ngModelChange)="
+                                      onUnitPhysicalFieldChange(ui, 'roofType', $event)
+                                    "
                                   >
                                     @for (opt of roofTypeOptions; track opt) {
                                       <option [value]="opt">{{ roofTypeDisplayMap[opt] }}</option>
@@ -1176,7 +1198,9 @@
                                   <select
                                     class="field-select"
                                     [ngModel]="unit.physicalAttributes?.wallType"
-                                    (ngModelChange)="onUnitPhysicalFieldChange(ui, 'wallType', $event)"
+                                    (ngModelChange)="
+                                      onUnitPhysicalFieldChange(ui, 'wallType', $event)
+                                    "
                                   >
                                     <option value="">Select wall type</option>
                                     @for (opt of wallTypeOptions; track opt) {
@@ -1191,7 +1215,9 @@
                                   <select
                                     class="field-select"
                                     [ngModel]="unit.physicalAttributes?.extBuildUseType"
-                                    (ngModelChange)="onUnitPhysicalFieldChange(ui, 'extBuildUseType', $event)"
+                                    (ngModelChange)="
+                                      onUnitPhysicalFieldChange(ui, 'extBuildUseType', $event)
+                                    "
                                   >
                                     <option value="">Select use type</option>
                                     @for (opt of propertyTypeOptions; track opt) {
@@ -1207,7 +1233,9 @@
                                     type="text"
                                     class="field-input"
                                     [ngModel]="unit.physicalAttributes?.extBuildUseSubType"
-                                    (ngModelChange)="onUnitPhysicalFieldChange(ui, 'extBuildUseSubType', $event)"
+                                    (ngModelChange)="
+                                      onUnitPhysicalFieldChange(ui, 'extBuildUseSubType', $event)
+                                    "
                                     placeholder="e.g., Apartment, Office"
                                   />
                                 </td>
@@ -1224,7 +1252,13 @@
                               <tr>
                                 <td class="label">Electricity</td>
                                 <td class="value">
-                                  <select class="field-select" [ngModel]="unit.utilities?.electricity" (ngModelChange)="onUnitUtilityFieldChange(ui, 'electricity', $event)">
+                                  <select
+                                    class="field-select"
+                                    [ngModel]="unit.utilities?.electricity"
+                                    (ngModelChange)="
+                                      onUnitUtilityFieldChange(ui, 'electricity', $event)
+                                    "
+                                  >
                                     <option value="">Select</option>
                                     @for (opt of utilityStatusOptions; track opt) {
                                       <option [value]="opt">{{ opt }}</option>
@@ -1235,7 +1269,13 @@
                               <tr>
                                 <td class="label">Telephone</td>
                                 <td class="value">
-                                  <select class="field-select" [ngModel]="unit.utilities?.telephone" (ngModelChange)="onUnitUtilityFieldChange(ui, 'telephone', $event)">
+                                  <select
+                                    class="field-select"
+                                    [ngModel]="unit.utilities?.telephone"
+                                    (ngModelChange)="
+                                      onUnitUtilityFieldChange(ui, 'telephone', $event)
+                                    "
+                                  >
                                     <option value="">Select</option>
                                     @for (opt of utilityStatusOptions; track opt) {
                                       <option [value]="opt">{{ opt }}</option>
@@ -1246,7 +1286,13 @@
                               <tr>
                                 <td class="label">Internet</td>
                                 <td class="value">
-                                  <select class="field-select" [ngModel]="unit.utilities?.internet" (ngModelChange)="onUnitUtilityFieldChange(ui, 'internet', $event)">
+                                  <select
+                                    class="field-select"
+                                    [ngModel]="unit.utilities?.internet"
+                                    (ngModelChange)="
+                                      onUnitUtilityFieldChange(ui, 'internet', $event)
+                                    "
+                                  >
                                     <option value="">Select</option>
                                     @for (opt of utilityStatusOptions; track opt) {
                                       <option [value]="opt">{{ opt }}</option>
@@ -1257,7 +1303,13 @@
                               <tr>
                                 <td class="label">Drinking Water</td>
                                 <td class="value">
-                                  <select class="field-select" [ngModel]="unit.utilities?.waterDrink" (ngModelChange)="onUnitUtilityFieldChange(ui, 'waterDrink', $event)">
+                                  <select
+                                    class="field-select"
+                                    [ngModel]="unit.utilities?.waterDrink"
+                                    (ngModelChange)="
+                                      onUnitUtilityFieldChange(ui, 'waterDrink', $event)
+                                    "
+                                  >
                                     <option value="">Select</option>
                                     @for (opt of utilityStatusOptions; track opt) {
                                       <option [value]="opt">{{ opt }}</option>
@@ -1268,7 +1320,11 @@
                               <tr>
                                 <td class="label">Water Supply</td>
                                 <td class="value">
-                                  <select class="field-select" [ngModel]="unit.utilities?.water" (ngModelChange)="onUnitUtilityFieldChange(ui, 'water', $event)">
+                                  <select
+                                    class="field-select"
+                                    [ngModel]="unit.utilities?.water"
+                                    (ngModelChange)="onUnitUtilityFieldChange(ui, 'water', $event)"
+                                  >
                                     <option value="">Select</option>
                                     @for (opt of utilityStatusOptions; track opt) {
                                       <option [value]="opt">{{ opt }}</option>
@@ -1279,7 +1335,13 @@
                               <tr>
                                 <td class="label">Drainage</td>
                                 <td class="value">
-                                  <select class="field-select" [ngModel]="unit.utilities?.drainage" (ngModelChange)="onUnitUtilityFieldChange(ui, 'drainage', $event)">
+                                  <select
+                                    class="field-select"
+                                    [ngModel]="unit.utilities?.drainage"
+                                    (ngModelChange)="
+                                      onUnitUtilityFieldChange(ui, 'drainage', $event)
+                                    "
+                                  >
                                     <option value="">Select</option>
                                     @for (opt of utilityStatusOptions; track opt) {
                                       <option [value]="opt">{{ opt }}</option>
@@ -1290,7 +1352,13 @@
                               <tr>
                                 <td class="label">Sanitation Sewer</td>
                                 <td class="value">
-                                  <select class="field-select" [ngModel]="unit.utilities?.sanitationSewer" (ngModelChange)="onUnitUtilityFieldChange(ui, 'sanitationSewer', $event)">
+                                  <select
+                                    class="field-select"
+                                    [ngModel]="unit.utilities?.sanitationSewer"
+                                    (ngModelChange)="
+                                      onUnitUtilityFieldChange(ui, 'sanitationSewer', $event)
+                                    "
+                                  >
                                     <option value="">Select</option>
                                     @for (opt of utilityStatusOptions; track opt) {
                                       <option [value]="opt">{{ opt }}</option>
@@ -1301,7 +1369,13 @@
                               <tr>
                                 <td class="label">Sanitation Gully</td>
                                 <td class="value">
-                                  <select class="field-select" [ngModel]="unit.utilities?.sanitationGully" (ngModelChange)="onUnitUtilityFieldChange(ui, 'sanitationGully', $event)">
+                                  <select
+                                    class="field-select"
+                                    [ngModel]="unit.utilities?.sanitationGully"
+                                    (ngModelChange)="
+                                      onUnitUtilityFieldChange(ui, 'sanitationGully', $event)
+                                    "
+                                  >
                                     <option value="">Select</option>
                                     @for (opt of utilityStatusOptions; track opt) {
                                       <option [value]="opt">{{ opt }}</option>
@@ -1312,7 +1386,13 @@
                               <tr>
                                 <td class="label">Garbage Disposal</td>
                                 <td class="value">
-                                  <select class="field-select" [ngModel]="unit.utilities?.garbageDisposal" (ngModelChange)="onUnitUtilityFieldChange(ui, 'garbageDisposal', $event)">
+                                  <select
+                                    class="field-select"
+                                    [ngModel]="unit.utilities?.garbageDisposal"
+                                    (ngModelChange)="
+                                      onUnitUtilityFieldChange(ui, 'garbageDisposal', $event)
+                                    "
+                                  >
                                     <option value="">Select</option>
                                     @for (opt of utilityStatusOptions; track opt) {
                                       <option [value]="opt">{{ opt }}</option>
@@ -1417,7 +1497,10 @@
                                         <td>
                                           <div
                                             class="rrr-holder-linked"
-                                            (click)="toggleUnitRRRExpand(entry.rrrId); $event.stopPropagation()"
+                                            (click)="
+                                              toggleUnitRRRExpand(entry.rrrId);
+                                              $event.stopPropagation()
+                                            "
                                             title="Click to view RRR details"
                                           >
                                             <span class="rrr-holder-name">{{
@@ -1464,7 +1547,8 @@
                                           <button
                                             class="rrr-remove-btn"
                                             (click)="
-                                              confirmRemoveUnitRRREntry(ui, ei); $event.stopPropagation()
+                                              confirmRemoveUnitRRREntry(ui, ei);
+                                              $event.stopPropagation()
                                             "
                                             title="Delete"
                                           >
@@ -1509,7 +1593,14 @@
                                                   type="text"
                                                   class="field-input"
                                                   [ngModel]="entry.documentRef"
-                                                  (ngModelChange)="onUnitRRRFieldChange(ui, ei, 'documentRef', $event)"
+                                                  (ngModelChange)="
+                                                    onUnitRRRFieldChange(
+                                                      ui,
+                                                      ei,
+                                                      'documentRef',
+                                                      $event
+                                                    )
+                                                  "
                                                   (blur)="onUnitRRRFieldBlur(ui, ei, 'documentRef')"
                                                   placeholder="Deed / title reference"
                                                 />
@@ -1525,12 +1616,18 @@
                                                     accept=".pdf,.docx,.doc"
                                                     multiple
                                                     hidden
-                                                    (change)="onUnitRRRDocumentUpload(ui, ei, $event)"
+                                                    (change)="
+                                                      onUnitRRRDocumentUpload(ui, ei, $event)
+                                                    "
                                                   />
                                                 </label>
                                               </div>
                                               @if (entry.documents?.length) {
-                                                @for (doc of entry.documents; track di; let di = $index) {
+                                                @for (
+                                                  doc of entry.documents;
+                                                  track di;
+                                                  let di = $index
+                                                ) {
                                                   <div class="rrr-doc-chip">
                                                     <svg
                                                       xmlns="http://www.w3.org/2000/svg"
@@ -1558,7 +1655,9 @@
                                                       <span class="doc-name">{{ doc.name }}</span>
                                                     }
                                                     @if (!doc.fileUrl) {
-                                                      <span class="doc-size">({{ formatFileSize(doc.size) }})</span>
+                                                      <span class="doc-size"
+                                                        >({{ formatFileSize(doc.size) }})</span
+                                                      >
                                                     }
                                                     <button
                                                       class="rrr-remove-btn"
@@ -1745,8 +1844,8 @@
                   }
                 } @else {
                   <p class="empty-message">
-                    No apartments created yet. Use <strong>Unit Composition</strong> to group
-                    rooms into apartments / legal spaces.
+                    No apartments created yet. Use <strong>Unit Composition</strong> to group rooms
+                    into apartments / legal spaces.
                   </p>
                 }
               </div>
@@ -2341,71 +2440,71 @@
             ></span>
           </button>
           @if (isSectionExpanded('tax')) {
-          <div class="section-content">
-            <table class="info-table editable-table">
-              <tr>
-                <td class="label">Assessed Value</td>
-                <td class="value">
-                  <input
-                    type="number"
-                    class="field-input"
-                    [ngModel]="info.taxValuation.assessedValue"
-                    (ngModelChange)="onTaxValuationFieldChange('assessedValue', $event)"
-                    min="0"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td class="label">Market Value</td>
-                <td class="value">
-                  <input
-                    type="number"
-                    class="field-input"
-                    [ngModel]="info.taxValuation.marketValue"
-                    (ngModelChange)="onTaxValuationFieldChange('marketValue', $event)"
-                    min="0"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td class="label">Annual Tax</td>
-                <td class="value">
-                  <input
-                    type="number"
-                    class="field-input"
-                    [ngModel]="info.taxValuation.annualTax"
-                    (ngModelChange)="onTaxValuationFieldChange('annualTax', $event)"
-                    min="0"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td class="label">Last Assessment</td>
-                <td class="value">
-                  <input
-                    type="date"
-                    class="field-input"
-                    [ngModel]="info.taxValuation.lastAssessmentDate"
-                    (ngModelChange)="onTaxValuationFieldChange('lastAssessmentDate', $event)"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td class="label">Tax Status</td>
-                <td class="value">
-                  <select
-                    class="field-select"
-                    [ngModel]="info.taxValuation.taxStatus"
-                    (ngModelChange)="onTaxValuationFieldChange('taxStatus', $event)"
-                  >
-                    @for (opt of taxStatusOptions; track opt) {
-                      <option [value]="opt">{{ opt }}</option>
-                    }
-                  </select>
-                </td>
-              </tr>
-            </table>
-          </div>
+            <div class="section-content">
+              <table class="info-table editable-table">
+                <tr>
+                  <td class="label">Assessed Value</td>
+                  <td class="value">
+                    <input
+                      type="number"
+                      class="field-input"
+                      [ngModel]="info.taxValuation.assessedValue"
+                      (ngModelChange)="onTaxValuationFieldChange('assessedValue', $event)"
+                      min="0"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td class="label">Market Value</td>
+                  <td class="value">
+                    <input
+                      type="number"
+                      class="field-input"
+                      [ngModel]="info.taxValuation.marketValue"
+                      (ngModelChange)="onTaxValuationFieldChange('marketValue', $event)"
+                      min="0"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td class="label">Annual Tax</td>
+                  <td class="value">
+                    <input
+                      type="number"
+                      class="field-input"
+                      [ngModel]="info.taxValuation.annualTax"
+                      (ngModelChange)="onTaxValuationFieldChange('annualTax', $event)"
+                      min="0"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td class="label">Last Assessment</td>
+                  <td class="value">
+                    <input
+                      type="date"
+                      class="field-input"
+                      [ngModel]="info.taxValuation.lastAssessmentDate"
+                      (ngModelChange)="onTaxValuationFieldChange('lastAssessmentDate', $event)"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td class="label">Tax Status</td>
+                  <td class="value">
+                    <select
+                      class="field-select"
+                      [ngModel]="info.taxValuation.taxStatus"
+                      (ngModelChange)="onTaxValuationFieldChange('taxStatus', $event)"
+                    >
+                      @for (opt of taxStatusOptions; track opt) {
+                        <option [value]="opt">{{ opt }}</option>
+                      }
+                    </select>
+                  </td>
+                </tr>
+              </table>
+            </div>
           }
         </div>
       }
@@ -2423,20 +2522,20 @@
             <span class="save-spinner save-spinner--button"></span>
             Processing
           } @else {
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-            <polyline points="17 21 17 13 7 13 7 21" />
-            <polyline points="7 3 7 8 15 8" />
-          </svg>
-          Save Building Details
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+              <polyline points="17 21 17 13 7 13 7 21" />
+              <polyline points="7 3 7 8 15 8" />
+            </svg>
+            Save Building Details
           }
         </button>
       </div>

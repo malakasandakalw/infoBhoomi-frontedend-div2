@@ -1,5 +1,11 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  inject,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -110,7 +116,11 @@ export class ParcelHistoryComponent {
       suId: string | number;
       label?: string;
       layerId?: string | number;
-      onRestored?: (result: { refreshMap?: boolean; refreshSelection?: boolean; suId: string | number }) => void;
+      onRestored?: (result: {
+        refreshMap?: boolean;
+        refreshSelection?: boolean;
+        suId: string | number;
+      }) => void;
     },
     private apiService: APIsService,
     private notificationService: NotificationService,
@@ -399,7 +409,12 @@ export class ParcelHistoryComponent {
   }
 
   parcelList(rows: any[] | undefined): string {
-    return (rows ?? []).map((row) => row?.su_id).filter(Boolean).join(', ') || 'None';
+    return (
+      (rows ?? [])
+        .map((row) => row?.su_id)
+        .filter(Boolean)
+        .join(', ') || 'None'
+    );
   }
 
   affectedText(row: HistoryRow): string {
@@ -433,7 +448,10 @@ export class ParcelHistoryComponent {
 
   isLocked(row: HistoryRow): boolean {
     const status = String(row.status_label || '').toLowerCase();
-    return status.includes('blocked') || Boolean(row.can_restore && !row.can_rectify_now && !row.can_undo_now);
+    return (
+      status.includes('blocked') ||
+      Boolean(row.can_restore && !row.can_rectify_now && !row.can_undo_now)
+    );
   }
 
   beforeText(row: HistoryRow): string {
@@ -564,7 +582,10 @@ export class ParcelHistoryComponent {
     const rings = this.extractRings(parsed);
     if (!rings.length) return '';
 
-    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    let minX = Infinity,
+      minY = Infinity,
+      maxX = -Infinity,
+      maxY = -Infinity;
     for (const ring of rings) {
       for (const [x, y] of ring) {
         if (x < minX) minX = x;
@@ -582,10 +603,11 @@ export class ParcelHistoryComponent {
     const py = (y: number) => offY + (maxY - y) * scale; // flip Y for screen coords
 
     return rings
-      .map((ring) =>
-        ring
-          .map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${px(x).toFixed(1)},${py(y).toFixed(1)}`)
-          .join(' ') + ' Z',
+      .map(
+        (ring) =>
+          ring
+            .map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${px(x).toFixed(1)},${py(y).toFixed(1)}`)
+            .join(' ') + ' Z',
       )
       .join(' ');
   }

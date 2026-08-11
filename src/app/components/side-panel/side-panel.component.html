@@ -1,8 +1,4 @@
-<aside
-  class="sidebar"
-  [class.collapsed]="isSidebarClosed()"
-  [class.extended]="extendWidth"
->
+<aside class="sidebar" [class.collapsed]="isSidebarClosed()" [class.extended]="extendWidth">
   <!-- Resize Handle -->
   <div class="resize-handle" (mousedown)="onResizeStart($event)"></div>
 

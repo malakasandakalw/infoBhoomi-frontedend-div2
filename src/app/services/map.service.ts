@@ -749,7 +749,10 @@ export class MapService {
         recordByUuid.set(record.properties.uuid, record);
       }
     }
-    console.log('[updateAllFeatureIdsAfterSave] recordByUuid keys:', Array.from(recordByUuid.keys()));
+    console.log(
+      '[updateAllFeatureIdsAfterSave] recordByUuid keys:',
+      Array.from(recordByUuid.keys()),
+    );
     if (recordByUuid.size === 0) return;
 
     const styleFn = makePerFeatureStyleFn(
@@ -799,7 +802,12 @@ export class MapService {
         feature.setStyle(styleFn);
         feature.changed();
         updatedCount++;
-        console.log('[updateAllFeatureIdsAfterSave] Updated feature:', uuid || stagedFeatureId, '→ su_id:', su_id);
+        console.log(
+          '[updateAllFeatureIdsAfterSave] Updated feature:',
+          uuid || stagedFeatureId,
+          '→ su_id:',
+          su_id,
+        );
       }
     }
     console.log('[updateAllFeatureIdsAfterSave] Total features updated:', updatedCount);

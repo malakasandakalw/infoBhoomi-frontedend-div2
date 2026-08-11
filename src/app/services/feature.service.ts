@@ -157,7 +157,11 @@ export class FeatureService {
     if (!items.length) return;
     this.clearRedoStack();
     for (const featureData of items) {
-      this.stagedChanges.push({ type: 'add', newFeatureData: featureData, originalFeatureData: featureData });
+      this.stagedChanges.push({
+        type: 'add',
+        newFeatureData: featureData,
+        originalFeatureData: featureData,
+      });
     }
     this.appStateService.setCanUndo(true);
     console.log(`[FeatureService] Staged bulk ADD of ${items.length} features.`);
@@ -499,15 +503,15 @@ export class FeatureService {
       );
     }
 
-   for (const u of updates) {
+    for (const u of updates) {
       // 1. Grab the payload
       const payload = u.newFeatureData;
-      
+
       // 2. SANITIZER: Convert string booleans back to actual booleans
       if (payload && payload.properties) {
-        Object.keys(payload.properties).forEach(key => {
-          if (payload.properties[key] === "true") payload.properties[key] = true;
-          if (payload.properties[key] === "false") payload.properties[key] = false;
+        Object.keys(payload.properties).forEach((key) => {
+          if (payload.properties[key] === 'true') payload.properties[key] = true;
+          if (payload.properties[key] === 'false') payload.properties[key] = false;
         });
       }
 

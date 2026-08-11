@@ -442,9 +442,18 @@ button.mat-dialog-close {
   text-transform: uppercase;
 }
 
-.history-badge--create    { background: #d4edda; color: #155724; }
-.history-badge--terminate { background: #f8d7da; color: #721c24; }
-.history-badge--update    { background: #fff3cd; color: #856404; }
+.history-badge--create {
+  background: #d4edda;
+  color: #155724;
+}
+.history-badge--terminate {
+  background: #f8d7da;
+  color: #721c24;
+}
+.history-badge--update {
+  background: #fff3cd;
+  color: #856404;
+}
 
 .history-party {
   display: block;
